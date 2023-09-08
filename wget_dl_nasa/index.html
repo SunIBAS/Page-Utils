@@ -52,13 +52,121 @@
             border-radius: 3px;
         }
 
+
+        /* 遮罩层样式 */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+
+        /* 侧边滑出面板样式 */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -600px; /* 隐藏在屏幕左侧 */
+            width: 600px;
+            height: 100%;
+            background-color: white;
+            color: black;
+            transition: left 0.3s ease-in-out;
+            z-index: 2;
+            overflow: scroll;
+        }
+        .sidebar::-webkit-scrollbar { width: 0 !important }
+
+        /* 侧边滑出面板内容样式 */
+        .sidebar-content {
+            padding: 20px;
+        }
+
+        /* 按钮样式 */
+        .open-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #fff;
+            color: #2196F3;
+            padding: 10px 15px;
+            cursor: pointer;
+            z-index: 1;
+            border-radius: 5px;
+            box-shadow: 4px 4px 2px 0px;
+        }
+        /* 日志卡片容器样式 */
+        .log-card {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 0 20px 20px;
+            /*margin: 20px;*/
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+            /*max-width: 400px;*/
+        }
+
+        /* 标题样式 */
+        .log-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        /* 时间戳样式 */
+        .log-timestamp {
+            color: #777;
+            font-size: 0.8rem;
+        }
+
+        /* 正文样式 */
+        .log-content {
+            margin-top: 10px;
+            line-height: 1.4;
+            word-break: break-all;
+            white-space: normal;
+        }
+
+        /* 标签样式 */
+        .log-tags {
+            margin-top: 10px;
+        }
+
+        /* 标签内每个标签的样式 */
+        .log-tag {
+            display: inline-block;
+            background-color: #333;
+            color: #fff;
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            margin-right: 5px;
+            border-radius: 3px;
+            margin-bottom: 3px;
+        }
+
+        .link-div {
+            line-height: 20px;
+            background: #f0f0f0;
+            padding: 4px;
+            margin-bottom: 4px;
+        }
+        .link-div:hover {
+            border-bottom: 2px solid dodgerblue;
+            margin-bottom: 2px;
+            background: black;
+            color: white;
+        }
     </style>
 </head>
 <body>
 <div class="container">
     <span>20230905 更新</span>
-    <h2><a href="https://ladsweb.modaps.eosdis.nasa.gov/tools-and-services/data-download-scripts/#wget">NASA wget</a></h2>
-    <h2><a href="./wget.exe">下载 wget-windows.exe</a></h2>
+    <h2><a target="_blank" href="https://ladsweb.modaps.eosdis.nasa.gov/tools-and-services/data-download-scripts/#wget">NASA wget</a></h2>
+    <h2><a target="_blank" href="./wget.exe">下载 wget-windows.exe</a></h2>
     <div>
         <div class="form-group">
             <label for="username">用户名:</label>
@@ -99,13 +207,205 @@
         </div>
     </div>
 </div>
-<div class="container">
-    <div>wget 要设置为全局变量，或者放到和 <span style="color: red;">下载文件</span> 同一个目录也可以</div>
-    <br>
-    <img src="./readme1.jpg" style="width: 100%;" alt="">
-    <img src="./readme2.jpg" style="width: 100%;" alt="">
+
+<div>
+    <div class="open-button" onclick="openSidebar('statement')">说明</div>
+
+    <!-- 遮罩层 -->
+    <div class="overlay overlay-statement" onclick="closeSidebar('statement')"></div>
+
+    <!-- 侧边滑出面板 -->
+    <div class="sidebar sidebar-statement">
+        <div class="sidebar-content">
+            <h2>说明</h2>
+            <p>
+                <div>wget 要设置为全局变量，或者放到和 <span style="color: red;">下载文件</span> 同一个目录也可以</div>
+            </p>
+            <p style="color: #795548" id="statement-filename">
+
+            </p>
+            <textarea id="code" style="width: 100%;resize: none;" name="" id="" cols="60" rows="20">
+window.filenameFromUrlGetSeq = ['LABEL', 'FILENAME', 'FILE'];
+/**
+ * @param link 完整链接     http://aa.bb.cc/dd/ee?ff=gg&hh=ii
+ * @param linkLastName  ?前的那部分 ee
+ * @param paramName     参数名称列表 [ff, hh]
+ * @param paramValue    参数值 [gg, ii]
+ * @return 返回一个名称或者null，返回null则会在日志中生成一个无法读取的日志信息
+ * */
+window.selfDefinedFilename = function (link, linkLastName, paramName, paramValue) {
+    return null;
+}
+            </textarea>
+            <button class="" onclick="runCode()">执行</button>
+            <p>
+                <img src="./readme1.jpg" style="width: 100%;" alt="">
+                <img src="./readme2.jpg" style="width: 100%;" alt="">
+            </p>
+        </div>
+    </div>
+</div>
+
+<div>
+    <div class="open-button" style="top: 80px" onclick="openSidebar('log')">日志</div>
+
+    <!-- 遮罩层 -->
+    <div class="overlay overlay-log" onclick="closeSidebar('log')"></div>
+
+    <!-- 侧边滑出面板 -->
+    <div class="sidebar sidebar-log">
+        <div class="sidebar-content">
+            <h2>日志</h2>
+            <p>
+                <span style="color: #2196F3;" onclick="document.getElementById('log').innerHTML = '';">清空日志</span>
+                <span style="color: #2196F3;" onclick="addLog('title', 'message', ['test']);">Test</span>
+            </p>
+            <div id="log"></div>
+        </div>
+    </div>
 </div>
 <script>
+    window.buildStatementFileName = function() {
+        let fields = window.filenameFromUrlGetSeq.map(_ => `<div class="log-tag">${_}</div>`).join('');
+        let urlParam = window.filenameFromUrlGetSeq.map((_,ind) => `${_}=${ind + 1}.jpg`);
+        let links = [];
+        for (let i = 0;i < window.filenameFromUrlGetSeq.length;i++) {
+            links.push(`<div class="link-div">http://xxx.xxx?${urlParam.join('&')}</div>`);
+            urlParam.push(urlParam.splice(0,1));
+        }
+        document.getElementById('statement-filename').innerHTML = `默认会使用文件的链接后缀作为文件名，例如下面链接，a.jpg 会作为文件名
+                <div class="link-div">http://xxx.xxx/a.jpg</div>
+                但是当链接包含参数时会从参数中选择一个作为文件名，默认找 ${fields} 中的一个作为文件名
+                <br/>
+                例如下面链接会，不区分大小写，默认都是 a.jpg 为文件名
+                ${window.filenameFromUrlGetSeq.map(_ => `<div class="link-div">http://xxx.xx?${_}=a.jpg</div>`).join('\r\n')}
+                如果无法找到，则会在日志中将异常打印出来，另外 ${fields} 是有顺序差异的
+                <br/>
+                例如下面链接一定是文件名 1.jpg
+                ${links.join('\r\n')}
+                顺序在下面文本框中修改后提交即可生效`;
+    }
+    window.onload = function () {
+        window.buildStatementFileName();
+    }
+    window.runCode = function() {
+        let code = document.getElementById('code').value;
+        try {
+            eval(code);
+            window.filenameFromUrlGetSeq = window.filenameFromUrlGetSeq.map(_ => _.toUpperCase());
+        } catch (e) {
+            console.log(e);
+            addLog('代码错误',`runCode [${e}]`, ['runCode']);
+        } finally {
+            window.buildStatementFileName();
+        }
+    }
+
+    function addLog(type, message, data) {
+        let log = document.getElementById('log');
+        let p = document.createElement('p');
+        p.innerHTML = `${type}: ${message}`;
+        if (data) {
+            p.innerHTML += `<br>`;
+        }
+    }
+</script>
+<script>
+    // 打开侧边滑出面板
+    function openSidebar(name) {
+        document.querySelector(`.sidebar-${name}`).style.left = '0';
+        document.querySelector(`.overlay-${name}`).style.display = 'block';
+    }
+
+    // 关闭侧边滑出面板
+    function closeSidebar(name) {
+        document.querySelector(`.sidebar-${name}`).style.left = '-600px';
+        document.querySelector(`.overlay-${name}`).style.display = 'none';
+    }
+
+    function addLog(title, message, labels) {
+        let logDom = document.getElementById('log');
+        let logCard = document.createElement('div');
+        logCard.classList.add('log-card');
+        logCard.innerHTML = `<h2 class="log-title">${title}</h2>
+  <p class="log-timestamp">${new Date().toLocaleString()}</p>
+  <p class="log-content">
+    ${message}
+  </p>
+  <div class="log-tags">
+    ${labels.map(_ => `<span class="log-tag">${_}</span>`).join('')}
+  </div>`;
+        if (logDom.children.length) {
+            logDom.insertBefore(logCard, logDom.children[0]);
+        } else {
+            logDom.append(logCard);
+        }
+    }
+</script>
+<!--<div class="container">-->
+<!--    <div>wget 要设置为全局变量，或者放到和 <span style="color: red;">下载文件</span> 同一个目录也可以</div>-->
+<!--    <br>-->
+<!--    <img src="./readme1.jpg" style="width: 100%;" alt="">-->
+<!--    <img src="./readme2.jpg" style="width: 100%;" alt="">-->
+<!--</div>-->
+<script>
+    window.filenameFromUrlGetSeq = ['LABEL', 'FILENAME', 'FILE'];
+    /**
+     * @param link 完整链接     http://aa.bb.cc/dd/ee?ff=gg&hh=ii
+     * @param linkLastName  ?前的那部分 ee
+     * @param paramName     参数名称列表 [ff, hh]
+     * @param paramValue    参数值 [gg, ii]
+     * @return 返回一个名称或者null，返回null则会在日志中生成一个无法读取的日志信息
+     * */
+    window.selfDefinedFilename = function (link, linkLastName, paramName, paramValue) {
+        return null;
+    }
+    let linkDearWithMethods = function (link, index) {
+        link = formatLink(link);
+        let sp = link.split('?');
+        if (sp.length === 1) {
+            return {
+                link: link,
+                filename: sp[0].split('/').reverse()[0]
+            };
+        } else {
+            let paramsName = {};
+            let paramsValue = [];
+            sp[1].split('&').forEach((_, ind) => {
+                let ps = _.split('=');
+                paramsName[ps[0].toUpperCase()] = ind;
+                paramsValue.push(ps[1])
+            });
+            let filename = '';
+            for (let i in window.filenameFromUrlGetSeq) {
+                if (window.filenameFromUrlGetSeq[i] in paramsName) {
+                    filename = paramsValue[paramsName[window.filenameFromUrlGetSeq[i]]];
+                    break;
+                }
+            }
+            if (filename) {
+                return {
+                    link: link,
+                    filename: filename
+                }
+            } else {
+                let pn = [];
+                for (let i in paramsName) {
+                    pn.push(i);
+                }
+                filename = window.selfDefinedFilename(link, sp[0].split('/').reverse()[0], pn, paramsValue);
+                if (filename) {
+                    return {
+                        link: link,
+                        filename: filename
+                    }
+                } else {
+                    addLog("获取文件名失败", `linkDearWithMethods 方法无法获取到文件名，完整链接为[${link}]`, pn);
+                    return null;
+                }
+            }
+        }
+    }
     let regMapping = (function () {
         let m = {
             '%20': ' ',
@@ -143,24 +443,23 @@
         });
         return link;
     };
-    let toWget = link => {
+    let toWget = (link, index) => {
         let user = document.getElementById('username').value;
         let password = document.getElementById('password').value;
-        let sp = link.split('LABEL=');
-        if (sp.length < 2) {
+        // let sp = link.split('LABEL=');
+        let ret = linkDearWithMethods(link, index);
+        if (!ret) {
             return '';
         } else {
-            let filename = sp[1].split('&')[0];
-            return `if not EXIST "${filename}" wget --no-check-certificate --load-cookies urs_cookies --save-cookies urs_cookies --keep-session-cookies --user=${user} --password=${password} "${formatLink(link)}" -O "${filename}"`;
+            return `if not EXIST "${ret.filename}" wget --no-check-certificate --load-cookies urs_cookies --save-cookies urs_cookies --keep-session-cookies --user=${user} --password=${password} "${ret.link}" -O "${ret.filename}"`;
         }
     }
-    let toCheck = (link, fname) => {
-        let sp = link.split('LABEL=');
-        if (sp.length < 2) {
+    let toCheck = (link, index, fname) => {
+        let ret = linkDearWithMethods(link, index);
+        if (!ret) {
             return '';
         } else {
-            let filename = sp[1].split('&')[0];
-            return `if not EXIST "${filename}" echo ${filename} >> ${fname}`;
+            return `if not EXIST "${ret.filename}" echo ${ret.filename} >> ${fname}`;
         }
     }
     /**
@@ -208,8 +507,8 @@
                 if (!fname) {
                     fname = 'report.txt';
                 }
-                let ret = `echo loss file>${fname}\r\n` + e.target.result.split('\n').map(_=>_.trim()).filter(_=>_).map(_ => {
-                    return toCheck(_, fname);
+                let ret = `echo loss file>${fname}\r\n` + e.target.result.split('\n').map(_=>_.trim()).filter(_=>_).map((_, index) => {
+                    return toCheck(_, index, fname);
                 }).join('\r\n');
                 funDownload(ret, `check-${new Date().getTime()}.txt`);
             };
